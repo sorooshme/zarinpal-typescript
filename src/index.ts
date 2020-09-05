@@ -50,6 +50,10 @@ export class Zarinpal {
   };
 
   constructor(merchantId: string, option: IZarinpalOption = {}) {
+    if (merchantId.length !== 36) {
+      throw new Error('Zarinpal merchantId must be 36 characters.');
+    }
+
     this.merchantId = merchantId;
     this.sandbox = option.sandbox || false;
     this.endpoints = this.setEndpoints();
