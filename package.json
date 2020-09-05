@@ -3,13 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": false,
+  "repository": {
+    "url": "https://github.com/SorooshMerajiyan/zarinpal-typescript"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build:w": "tsc -w",
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Soroosh Merajiyan",
+  "license": "MIT",
   "devDependencies": {
     "@types/node-fetch": "^2.5.7",
     "typescript": "^4.0.2"
