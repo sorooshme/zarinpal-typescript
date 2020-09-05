@@ -1,11 +1,13 @@
 {
   "name": "zarinpal-typescript",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "description": "Simple Zarinpal package written in TypeScript.",
   "private": false,
   "repository": {
-    "url": "https://github.com/SorooshMerajiyan/zarinpal-typescript"
+    "url": "https://github.com/SorooshMerajiyan/zarinpal-typescript.git",
+    "type": "git"
   },
   "files": [
     "dist/**/*"
