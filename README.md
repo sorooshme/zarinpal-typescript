@@ -11,7 +11,8 @@ Usage:
 ```typescript
 import { Zarinpal } from 'zarinpal-typescript';
 
-const zp = new Zarinpal('my-Merchant-Id-Here');
+// Sandbox is for development
+const zp = new Zarinpal('my-Merchant-Id-Here', { sandbox: true });
 
 (async () => {
   // Get Authority
