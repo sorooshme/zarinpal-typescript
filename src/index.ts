@@ -117,7 +117,6 @@ export class Zarinpal {
     const resBody: IZarinpalGeneralResponse = await res.json();
 
     if (!res.ok) {
-      console.log(resBody);
       throw new Error('Zarinpal response was not ok.');
     }
 
