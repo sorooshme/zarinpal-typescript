@@ -15,11 +15,13 @@ export type TAllowedMethods = 'POST';
 export interface IZarinpalRequestPaymentResponse {
   Status: number;
   Authority: string;
+  errorMessage?: string;
 }
 
 export interface IZarinpalVerifyPaymentResponse {
   Status: number;
   RefID: number;
+  errorMessage?: string;
 }
 
 export interface IZarinpalGeneralResponse {
@@ -72,7 +74,7 @@ export class Zarinpal {
     };
   };
 
-  private handleError(code: number | undefined): never {
+  private getErrorMessage(code: number | undefined): string {
     let message = 'Zarinpal is down.';
     switch (code) {
       case -1:
@@ -104,7 +106,7 @@ export class Zarinpal {
         break;
     }
 
-    throw new Error(message);
+    return message;
   }
 
   private requestZarinpal = async (
@@ -125,7 +127,8 @@ export class Zarinpal {
     }
 
     if (resBody.Status < 0) {
-      return this.handleError(resBody.Status);
+      const errorMessage = this.getErrorMessage(resBody.Status);
+      resBody.errorMessage = errorMessage;
     }
 
     return resBody;
@@ -143,7 +146,7 @@ export class Zarinpal {
       })
     );
 
-    return response.Authority;
+    return response;
   };
 
   public startPayment = (authority: string) => {
@@ -161,6 +164,6 @@ export class Zarinpal {
       }
     );
 
-    return response.RefID;
+    return response;
   };
 }
