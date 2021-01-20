@@ -2,40 +2,64 @@ Simple Zarinpal package written in TypeScript.
 
 # Installation
 
-```npm
+```bash
+# Using npm
 npm i zarinpal-typescript
+
+# Using yarn
+yarn add zarinpal-typescript
 ```
 
-Usage:
+## Configuration
 
 ```typescript
 import { Zarinpal } from 'zarinpal-typescript';
 
-// Sandbox is for development
-const zp = new Zarinpal('my-Merchant-Id-Here', { sandbox: true });
+const zp = new Zarinpal('merchant-code', {
+    /**
+     * Sandbox is for development only
+     * And should be turned off in production.
+     */
+    sandbox: true
+});
+```
 
-(async () => {
-  // Get Authority
-  const request = await zp.requestPayment({
-    amount: 1000,
-    callbackUrl: 'https://myCallbackUrl.com',
-    description: 'my Description',
-  });
+## Creating invoice
 
-  // Check for errors
-  if (request.errorMessage) {
-    throw new Error(request.errorMessage);
-  }
+```typescript
+// Create invoice
+const invoiceResponse = await zp.requestPayment({
+    amount: 1000, // Toman
+    callbackUrl: 'https://example.com/my-call-back-url?custom-param=value',
+    description: 'Invoice description', // This is required!
+});
 
-  // Get Payment Url
-  const paymentUrl = zp.startPayment(authority);
+// Check for any errors
+if (invoiceResponse.errorMessage) throw new Error(invoiceResponse.errorMessage);
 
-  // Verify Payment
-  const verify = await zp.verifyPayment({ amount: 1000, authority });
+// Get payment url
+const paymentUrl = zp.startPayment(invoiceResponse.Authority);
 
-  // Check for errors
-  if (verify.errorMessage) {
-    throw new Error(verify.errorMessage);
-  }
-})();
+// Redirect user to the paymentUrl
+```
+
+## Verifying the payment (callback)
+
+```typescript
+const amount = 1000;
+const authority = 'invoice-authority';
+
+const verificationResponse = await zp.verifyPayment({ amount: amount, authority: authority });
+
+// Check for errors
+if (verificationResponse.errorMessage) throw new Error(verificationResponse.errorMessage);
+
+switch(verificationResponse.Status) {
+    case 100:
+        // Invoice paid
+        break;
+    case 101:
+        // Invoice is already paid.
+        break;
+}
 ```
