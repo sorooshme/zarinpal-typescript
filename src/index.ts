@@ -1,8 +1,10 @@
 import fetch from 'node-fetch';
+import { Agent } from 'http';
 
 export interface IZarinpalOption {
   sandbox?: boolean;
   timeout?: number;
+  agent?: Agent | ((parsedUrl: URL) => Agent);
 }
 
 export interface IZarinpalEndpoints {
@@ -52,6 +54,7 @@ export class Zarinpal {
     'Content-Type': 'application/json',
   };
   private readonly timeout: number;
+  private readonly agent?: Agent | ((parsedUrl: URL) => Agent);
 
   constructor(merchantId: string, option: IZarinpalOption = {}) {
     if (merchantId.length !== 36) {
@@ -61,6 +64,7 @@ export class Zarinpal {
     this.merchantId = merchantId;
     this.sandbox = option.sandbox || false;
     this.timeout = option.timeout || 20000;
+    this.agent = option.agent;
     this.endpoints = this.setEndpoints();
   }
 
@@ -122,6 +126,7 @@ export class Zarinpal {
       headers: this.basicHeaders,
       body: JSON.stringify(body),
       timeout: this.timeout,
+      agent: this.agent,
     });
 
     const resBody: IZarinpalGeneralResponse = await res.json();
