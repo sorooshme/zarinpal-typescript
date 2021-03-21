@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { Agent } from 'http';
+import AbortController, { AbortSignal } from 'abort-controller';
 
 export interface IZarinpalOption {
   sandbox?: boolean;
@@ -116,17 +117,31 @@ export class Zarinpal {
     return message;
   }
 
+  private getTimeoutSignal(ms: number): AbortSignal {
+    const abortController = new AbortController();
+    const timeoutSignal = abortController.signal;
+    setTimeout(() => {
+      abortController.abort();
+    }, ms);
+
+    return timeoutSignal;
+  }
+
   private requestZarinpal = async (
     url: string,
     method: TAllowedMethods,
     body: any
   ): Promise<IZarinpalGeneralResponse> => {
+    const signal = this.timeout
+      ? this.getTimeoutSignal(this.timeout)
+      : undefined;
+
     const res = await fetch(url, {
       method,
       headers: this.basicHeaders,
       body: JSON.stringify(body),
-      timeout: this.timeout,
       agent: this.agent,
+      signal,
     });
 
     const resBody: IZarinpalGeneralResponse = await res.json();
